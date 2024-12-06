@@ -1,0 +1,9 @@
+[
+    {
+        "id": "base",
+        "src": "Base.PNG",
+        "alt": "Base Character",
+        "visibility": "visible",
+        "lockVisibility": true
+    }
+]

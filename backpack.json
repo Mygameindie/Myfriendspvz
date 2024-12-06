@@ -1,0 +1,62 @@
+[
+    {
+        "id": "backpack1_1",
+        "src": "backpack1_1.PNG",
+        "alt": "Backpack 1_1",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_2",
+        "src": "backpack1_2.PNG",
+        "alt": "backpack 1_2",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_3",
+        "src": "backpack1_3.PNG",
+        "alt": "backpack 1_3",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_4",
+        "src": "backpack1_4.PNG",
+        "alt": "backpack 1_4",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_5",
+        "src": "backpack1_5.PNG",
+        "alt": "backpack 1_5",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_6",
+        "src": "backpack1_6.PNG",
+        "alt": "backpack 1_6",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_7",
+        "src": "backpack1_7.PNG",
+        "alt": "backpack 1_7",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_8",
+        "src": "backpack1_8.PNG",
+        "alt": "backpack 1_8",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_9",
+        "src": "backpack1_9.PNG",
+        "alt": "backpack 1_9",
+        "visibility": "hidden"
+    },
+    {
+        "id": "backpack1_10",
+        "src": "backpack1_10.PNG",
+        "alt": "backpack 1_10",
+        "visibility": "hidden"
+    }
+]

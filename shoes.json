@@ -1,0 +1,62 @@
+[
+    {
+        "id": "shoes1_1",
+        "src": "shoes1_1.PNG",
+        "alt": "Shoes 1_1",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_2",
+        "src": "shoes1_2.PNG",
+        "alt": "Shoes 1_2",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_3",
+        "src": "shoes1_3.PNG",
+        "alt": "shoes 1_3",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_4",
+        "src": "shoes1_4.PNG",
+        "alt": "shoes 1_4",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_5",
+        "src": "shoes1_5.PNG",
+        "alt": "shoes 1_5",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_6",
+        "src": "shoes1_6.PNG",
+        "alt": "shoes 1_6",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_7",
+        "src": "shoes1_7.PNG",
+        "alt": "shoes 1_7",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_8",
+        "src": "shoes1_8.PNG",
+        "alt": "shoes 1_8",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_9",
+        "src": "shoes1_9.PNG",
+        "alt": "shoes 1_9",
+        "visibility": "hidden"
+    },
+    {
+        "id": "shoes1_10",
+        "src": "shoes1_10.PNG",
+        "alt": "shoes 1_10",
+        "visibility": "hidden"
+    }
+]
