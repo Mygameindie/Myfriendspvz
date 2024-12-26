@@ -1,168 +1,159 @@
-// Array of JSON file paths
+
+// Refactored script.js with "base" always visible and non-removable
+
+// JSON file paths
 const jsonFiles = [
-    'bottomunderwear1.json', 'bottomunderwear2.json',
-    'topunderwear1.json', 'topunderwear2.json',
-    'boxers1.json', 'boxers2.json',
-    'sweatshirt1.json', 'sweatshirt2.json',
-    'shoes1.json', 'shoes2.json',
-    'pants1.json', 'pants2.json',
-    'skirt1.json', 'skirt2.json',
-    'top1.json', 'top2.json',
-    'outerpants2.json',
-    'dress1.json', 'dress2.json',
-    'jacket1.json', 'jacket2.json',
-    'accessories1.json', 'accessories2.json',
-    'hat1.json', 'hat2.json'
+    'accessories.json',
+    'backpack.json',
+    'jacket.json',
+    'pants.json',
+    'shoes.json',
+    'base.json',
+    'top.json',
+    'weapon.json',
+    'plants.json',
+    'waist.json',
+    'hat.json',
 ];
 
-// Helper function to set z-index for categories
-function getZIndex(categoryName) {
-    const zIndexMap = {
-        bottomunderwear: 2,
-        topunderwear: 3,
-        boxers: 4,
-        sweatshirt: 5,
-        shoes: 6,
-        pants: 8,
-        skirt: 9,
-        top: 10,
-        outerpants: 11,
-        dress: 12,
-        jacket: 13,
-        accessories: 14,
-        hat: 15,
-    };
-    return zIndexMap[categoryName] || 0;
-}
+// Z-index mapping
+const zIndexMap = {
+    backpack: 1,
+    base: 2,
+    shoes: 3,
+    pants: 4,
+    top: 5,
+    jacket: 6,
+    accessories: 7,
+    weapon: 8,
+    plants: 9,
+    hat: 10,
+    waist: 11,
+};
 
-// Load a JSON file and return its data
-async function loadItemFile(file) {
-    try {
-        const response = await fetch(file);
-        if (!response.ok) throw new Error(`Error loading file: ${file}`);
-        return await response.json();
-    } catch (error) {
-        console.error(`Failed to load ${file}:`, error);
-        return [];
-    }
-}
-
-// Toggle visibility of item images and enforce mutual exclusivity within the same category
-function toggleVisibility(itemId, categoryName) {
-    const selectedItem = document.getElementById(itemId);
-    const isVisible = selectedItem.style.visibility === 'visible';
-
-    // Hide all items in the same category
-    const categoryItems = document.querySelectorAll(`.${categoryName}`);
-    categoryItems.forEach(item => {
-        item.style.visibility = 'hidden';
-    });
-
-    // Toggle visibility of the clicked item
-    selectedItem.style.visibility = isVisible ? 'hidden' : 'visible';
-
-    // Ensure correct z-index
-    if (!isVisible) {
-        selectedItem.style.zIndex = getZIndex(categoryName);
-
-        // Manage visibility of conflicting categories
-        if (['dress1', 'dress2'].includes(categoryName)) {
-            hideSpecificCategories(['top', 'pants', 'skirt', 'sweatshirt', 'outerpants']);
-        } else if (categoryName === 'outerpants') {
-            hideSpecificCategories(['pants', 'skirt', 'dress']);
-        } else if (['pants', 'skirt'].includes(categoryName)) {
-            hideSpecificCategories(['outerpants', 'dress']);
-        }
-    }
-
-    console.log(`Toggled ${itemId} (${categoryName}) to ${selectedItem.style.visibility}`);
-}
-
-// Helper function to hide items for specific categories
-function hideSpecificCategories(categories) {
-    categories.forEach(category => {
-        const items = document.querySelectorAll(`.${category}`);
-        items.forEach(item => {
-            item.style.visibility = 'hidden';
-        });
-    });
-}
-
-// Load items in batches
-async function loadItemsInBatches(batchSize = 5) {
+// Load items and initialize
+async function loadItems() {
     const baseContainer = document.querySelector('.base-container');
     const controlsContainer = document.querySelector('.controls');
 
-    for (let i = 0; i < jsonFiles.length; i += batchSize) {
-        const batch = jsonFiles.slice(i, i + batchSize);
+    for (const file of jsonFiles) {
+        try {
+            const response = await fetch(file);
+            if (!response.ok) throw new Error(`Failed to load file: ${file}`);
+            const items = await response.json();
+            const category = file.replace('.json', '');
 
-        await Promise.all(batch.map(async file => {
-            const data = await loadItemFile(file);
-            const categoryName = file.replace('.json', '').toLowerCase();
             const categoryContainer = document.createElement('div');
             categoryContainer.classList.add('category');
 
             const categoryHeading = document.createElement('h3');
-            categoryHeading.textContent = categoryName;
+            categoryHeading.textContent = category.charAt(0).toUpperCase() + category.slice(1);
             categoryContainer.appendChild(categoryHeading);
 
-            data.forEach(item => {
-                const itemId = item.id.endsWith('.png') ? item.id : `${item.id}.png`;
-
+            items.forEach(item => {
                 const img = document.createElement('img');
-                img.id = itemId;
+                img.id = item.id;
                 img.src = item.src;
                 img.alt = item.alt;
-                img.classList.add(categoryName);
-                img.style.visibility = item.visibility === "visible" ? "visible" : "hidden";
+                img.classList.add(category);
+                img.dataset.clickCount = 0; // Initialize click count
+                img.style.visibility = category === 'base' ? 'visible' : 'hidden'; // Base always visible
                 img.style.position = 'absolute';
-                img.style.zIndex = getZIndex(categoryName);
+                img.style.zIndex = zIndexMap[category] || 0;
                 baseContainer.appendChild(img);
 
-                const button = document.createElement('img');
-                button.src = item.src.replace('.png', 'b.png');
-                button.alt = `${item.alt} Button`;
-                button.classList.add('item-button');
-                button.onclick = () => toggleVisibility(itemId, categoryName);
-                categoryContainer.appendChild(button);
+                // Add buttons for categories other than "base"
+                if (category !== 'base') {
+                    const button = document.createElement('img');
+                    button.src = item.src;
+                    button.alt = `${item.alt} Button`;
+                    button.classList.add('item-button');
+                    button.onclick = () => toggleItem(img.id, category, item);
+                    categoryContainer.appendChild(button);
+                }
             });
 
             controlsContainer.appendChild(categoryContainer);
-        }));
-
-        await new Promise(resolve => setTimeout(resolve, 50)); // Delay for responsiveness
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
 
-// Adjust canvas layout dynamically
-function adjustCanvasLayout() {
+// Toggle item wear/remove cycle
+function toggleItem(itemId, categoryName, itemData) {
+    if (categoryName === 'base') return; // Prevent toggling or removal of base
+
+    const categoryItems = document.querySelectorAll(`.${categoryName}`);
+    const selectedItem = document.getElementById(itemId);
+
+    if (!selectedItem) {
+        // Re-add the item if it was removed
+        const baseContainer = document.querySelector('.base-container');
+        const img = document.createElement('img');
+        img.id = itemData.id;
+        img.src = itemData.src;
+        img.alt = itemData.alt;
+        img.classList.add(categoryName);
+        img.dataset.clickCount = 1; // Set to visible on first re-add
+        img.style.visibility = 'visible';
+        img.style.position = 'absolute';
+        img.style.zIndex = zIndexMap[categoryName] || 0;
+        baseContainer.appendChild(img);
+        return;
+    }
+
+    let clickCount = parseInt(selectedItem.dataset.clickCount, 10);
+
+    // Hide all items in the same category
+    categoryItems.forEach(item => {
+        if (item.id !== itemId) {
+            item.style.visibility = 'hidden';
+            item.dataset.clickCount = 0; // Reset click count for other items
+        }
+    });
+
+    clickCount += 1;
+
+    if (clickCount === 1) {
+        // Show the item
+        selectedItem.style.visibility = 'visible';
+    } else if (clickCount === 2) {
+        // Remove the item
+        selectedItem.remove();
+    }
+
+    selectedItem.dataset.clickCount = clickCount % 2; // Reset to 0 after removal
+}
+
+// Adjust layout dynamically
+function adjustLayout() {
     const baseContainer = document.querySelector('.base-container');
     const controlsContainer = document.querySelector('.controls');
-
     const screenWidth = window.innerWidth;
 
     if (screenWidth <= 600) {
         baseContainer.style.display = 'flex';
-        baseContainer.style.flexWrap = 'wrap';
-        baseContainer.style.justifyContent = 'center';
+        baseContainer.style.flexWrap = 'nowrap';
+        baseContainer.style.justifyContent = 'space-between';
     } else {
         baseContainer.style.display = 'block';
         baseContainer.style.width = '500px';
         baseContainer.style.height = '400px';
-        controlsContainer.style.marginTop = '20px';
+        controlsContainer.style.marginTop = 'auto';
     }
 }
 
-// Apply layout adjustment on load and resize
-window.onload = () => {
-    loadItemsInBatches();
-    adjustCanvasLayout();
-};
-
-window.addEventListener('resize', adjustCanvasLayout);
-
-// Function to enter game mode
+// Initialize game
 function enterGame() {
     document.querySelector('.main-menu').style.display = 'none';
     document.querySelector('.game-container').style.display = 'block';
 }
+
+// Load items and layout on page load
+window.onload = () => {
+    loadItems();
+    adjustLayout();
+};
+
+window.addEventListener('resize', adjustLayout);
